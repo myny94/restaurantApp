@@ -1,46 +1,53 @@
-import pkg from "pg";
-import { Kysely, PostgresDialect, Generated } from "kysely";
-const { Pool } = pkg;
+import pkg from 'pg'
+import { Kysely, PostgresDialect, Generated } from 'kysely'
+const { Pool } = pkg
 
 export type RestaurantTable = {
-  id: Generated<string>;
-  restaurant_id: string;
-  capacity: number;
-  description: string;
-};
+  id: Generated<string>
+  restaurant_id: string
+  capacity: number
+  description: string
+}
 
 export type Restaurant = {
-  id: Generated<string>;
-  name: string;
-  description: string;
-  address: string;
-};
+  id: Generated<string>
+  name: string
+  description: string
+  address: string
+  tables: string[]
+}
+
+export type Table = {
+  id: Generated<string>
+  restaurant_id: string
+  capacity: number
+}
 
 export type Reservation = {
-  id: Generated<string>;
-  restaurant_id: string;
-  reservationFrom: Date;
-  reservationTo: Date;
-  numberOfPersons: Number;
-};
+  id: Generated<string>
+  restaurant_id: string
+  reservationFrom: Date
+  reservationTo: Date
+  numberOfPersons: number
+}
 
 export type ReservationTable = {
-  reservation_id: string;
-  table_id: string;
-};
+  reservation_id: string
+  table_id: string
+}
 
 export interface Database {
-  restaurant: Restaurant;
-  reservation: Reservation;
+  restaurant: Restaurant
+  reservation: Reservation
 }
 
 export const db = new Kysely<Database>({
   dialect: new PostgresDialect({
     pool: new Pool({
-      host: "localhost",
-      database: "postgres",
-      user: "postgres",
-      password: "postgres",
+      host: 'localhost',
+      database: 'postgres',
+      user: 'postgres',
+      password: 'postgres',
     }),
   }),
-});
+})

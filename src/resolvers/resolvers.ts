@@ -1,6 +1,7 @@
-import reservationResolver from './reservation'
-import restaurantResolver from './restaurantResolver'
-import { merge } from 'lodash'
+import reservationResolver from './reservationResolver.js'
+import restaurantResolver from './restaurantResolver.js'
+import pkg from 'lodash'
 
+const { merge } = pkg
 const resolvers = merge({}, reservationResolver, restaurantResolver)
-export default resolvers;
+export default resolvers
