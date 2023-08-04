@@ -1,49 +1,55 @@
-import { restaurants, reservations } from "../dataset.js";
-import { db } from "../kysely.js";
-import { Restaurant } from "../generated/gql-types.js";
+import { restaurants } from '../dataset.js'
+import { db } from '../kysely.js'
+import { RestaurantInput } from '../generated/gql-types.js'
 
 const restaurantResolver = {
   Query: {
     restaurants: () => restaurants,
-    getRestaurantById: async (_: any, args: { id: string }) => {
+    getRestaurantById: async (args: { id: string }) => {
       const restaurant = await db
-        .selectFrom("restaurant")
+        .selectFrom('restaurant')
         .selectAll()
-        .where("id", "=", args.id)
-        .executeTakeFirst();
-      return restaurant;
+        .where('id', '=', args.id)
+        .executeTakeFirst()
+      return restaurant
     },
     searchRestaurants: async (_: any, args: { searchTerm: string }) => {
       const restaurantsWithSearchTerm = db
-        .selectFrom("restaurant")
+        .selectFrom('restaurant')
         .selectAll()
-        .where("restaurant.name", "ilike", `%${args.searchTerm}%`);
-      return restaurantsWithSearchTerm;
+        .where('restaurant.name', 'ilike', `%${args.searchTerm}%`)
+      return restaurantsWithSearchTerm
+    },
+    getTables: async (_: any, args: { restaurantId: string }) => {
+      const tables = db
+        .selectFrom('restaurant')
+        .select('tables')
+        .where('restaurant.id', '=', args.restaurantId)
+      return tables
     },
   },
 
   Mutation: {
-    addNewRestaurant: async (_: any, args: { restaurant: Restaurant }) => {
-      db.insertInto("restaurant")
+    addNewRestaurant: async (_: any, args: { restaurant: RestaurantInput }) => {
+      db.insertInto('restaurant')
         .values(args)
-        .returning("id")
-        .executeTakeFirst();
+        .returning('id')
+        .executeTakeFirst()
     },
     updateRestaurant: async (
       _: any,
-      args: { updatedRestaurant: Restaurant }
+      args: { id: string; updatedRestaurant: RestaurantInput }
     ) => {
-      db.updateTable("restaurant")
+      db.updateTable('restaurant')
         .set(args.updatedRestaurant)
-        .where("id", "=", args.updatedRestaurant.id)
-        .executeTakeFirst();
+        .where('id', '=', args.id)
+        .executeTakeFirst()
     },
-    removeRestaurant: async (_:any, args: { id: string } ) => {
-      db.deleteFrom("restaurant")
-      .where("restaurant.id", "=", args.id)
-      .executeTakeFirst();
-  }
+    deleteRestaurant: async (_: any, args: { id: string }) => {
+      db.deleteFrom('restaurant')
+        .where('restaurant.id', '=', args.id)
+        .executeTakeFirst()
+    },
   },
-};
-export default restaurantResolver;
-
+}
+export default restaurantResolver
