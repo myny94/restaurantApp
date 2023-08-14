@@ -2,19 +2,11 @@ import pkg from 'pg'
 import { Kysely, PostgresDialect, Generated } from 'kysely'
 const { Pool } = pkg
 
-export type RestaurantTable = {
-  id: Generated<string>
-  restaurant_id: string
-  capacity: number
-  description: string
-}
-
 export type Restaurant = {
   id: Generated<string>
   name: string
   description: string
   address: string
-  tables: string[]
 }
 
 export type Table = {
@@ -26,12 +18,12 @@ export type Table = {
 export type Reservation = {
   id: Generated<string>
   restaurant_id: string
-  reservationFrom: Date
-  reservationTo: Date
-  numberOfPersons: number
+  reservation_from: Date
+  reservation_to: Date
+  number_of_persons: number
 }
 
-export type ReservationTable = {
+export type ReservationTableAssociation = {
   reservation_id: string
   table_id: string
 }
@@ -39,6 +31,7 @@ export type ReservationTable = {
 export interface Database {
   restaurant: Restaurant
   reservation: Reservation
+  reservation_table_association: ReservationTableAssociation
 }
 
 export const db = new Kysely<Database>({

@@ -6,7 +6,7 @@ const config: CodegenConfig = {
   documents: null,
   generates: {
     './src/generated/gql-types.d.ts': {
-      plugins: ['typescript'],
+      plugins: ['typescript', 'typescript-resolvers'],
     },
   },
 }
