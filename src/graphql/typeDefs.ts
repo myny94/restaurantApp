@@ -8,22 +8,22 @@ const typeDefs = gql`
     name: String!
     address: String!
     description: String!
-    table: [Table!]!
+    tables: [Table!]!
   }
 
   type Table {
     id: ID!
     restaurantId: String!
-    capacity: Int
+    capacity: Int!
   }
 
   type Reservation {
     id: ID!
-    restaurantId: String
-    tables: [Table]
-    numberOfPersons: Int
-    reservationFrom: Date
-    reservationTo: Date
+    restaurantId: String!
+    tables: [Table!]!
+    numberOfPersons: Int!
+    reservationFrom: Date!
+    reservationTo: Date!
   }
 
   input RestaurantInput {
@@ -34,16 +34,14 @@ const typeDefs = gql`
   }
 
   input ReservationInput {
-    restaurantId: String
-    tables: [TableInput!]!
-    numberOfPersons: Int
-    reservationFrom: Date
-    reservationTo: Date
+    restaurantId: String!
+    numberOfPersons: Int!
+    reservationFrom: Date!
+    reservationTo: Date!
   }
 
   input TableInput {
-    restaurantId: String!
-    capacity: Int
+    capacity: Int!
   }
 
   # The "Query" type is special: it lists all of the available queries that
@@ -53,22 +51,17 @@ const typeDefs = gql`
     restaurants: [Restaurant]
     reservations: [Reservation]
     tables: [Table]
-    getRestaurantById(id: String): Restaurant
-    getReservationById(id: String): Reservation
+    getRestaurantById(id: String!): Restaurant
+    getReservationById(id: String!): Reservation
     searchRestaurants(searchTerm: String): [Restaurant]
     getTables(restaurantId: String): [Table]
   }
 
   type Mutation {
-    updateRestaurant(updatedRestaurant: RestaurantInput!): Restaurant!
     addNewRestaurant(input: RestaurantInput): Restaurant!
-    deleteRestaurant(id: String!): Restaurant!
-    updateReservation(
-      id: String!
-      updatedReservation: ReservationInput!
-    ): Reservation!
-    addNewReservation(input: ReservationInput): Reservation!
-    deleteReservation(id: String!): Reservation!
+    deleteRestaurant(id: String!): String!
+    addNewReservation(input: ReservationInput!): Reservation!
+    deleteReservation(id: String!): String!
   }
 `
 export default typeDefs
