@@ -31,6 +31,7 @@ export type ReservationTableAssociation = {
 export interface Database {
   restaurant: Restaurant
   reservation: Reservation
+  restaurant_table: Table
   reservation_table_association: ReservationTableAssociation
 }
 

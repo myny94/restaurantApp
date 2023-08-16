@@ -1,5 +1,6 @@
 import { db } from '../kysely.js'
 import { Resolvers } from '../generated/gql-types.js'
+import { jsonArrayFrom } from 'kysely/helpers/postgres.js'
 
 const restaurantResolver: Resolvers = {
   Query: {
@@ -7,29 +8,63 @@ const restaurantResolver: Resolvers = {
       const restaurants = await db
         .selectFrom('restaurant')
         .selectAll()
+        .select(({ selectFrom }) => [
+          jsonArrayFrom(
+            selectFrom('restaurant_table')
+              .select([
+                'restaurant_table.capacity',
+                'restaurant_table.id',
+                'restaurant_table.restaurant_id',
+              ])
+              .whereRef('restaurant_table.restaurant_id', '=', 'restaurant.id')
+          ).as('tables'),
+        ])
         .execute()
+
       return restaurants.map(restaurant => ({
         id: restaurant.id,
         name: restaurant.name,
         address: restaurant.address,
         description: restaurant.description,
-        tables: [],
+        tables: restaurant.tables.map(table => ({
+          id: table.id,
+          restaurantId: table.restaurant_id,
+          capacity: table.capacity,
+        })),
       }))
     },
+
     getRestaurantById: async (_: unknown, args) => {
       const restaurant = await db
         .selectFrom('restaurant')
-        .selectAll()
         .where('id', '=', args.id)
+        .selectAll()
+        .select(({ selectFrom }) => [
+          jsonArrayFrom(
+            selectFrom('restaurant_table')
+              .select([
+                'restaurant_table.capacity',
+                'restaurant_table.id',
+                'restaurant_table.restaurant_id',
+              ])
+              .whereRef('restaurant_table.restaurant_id', '=', 'restaurant.id')
+          ).as('tables'),
+        ])
         .executeTakeFirst()
+
       return {
         id: restaurant.id,
         name: restaurant.name,
         description: restaurant.address,
         address: restaurant.address,
-        tables: [],
+        tables: restaurant.tables.map(table => ({
+          id: table.id,
+          restaurantId: table.restaurant_id,
+          capacity: table.capacity,
+        })),
       }
     },
+
     searchRestaurants: async (_: unknown, args) => {
       const restaurantsWithSearchTerm = await db
         .selectFrom('restaurant')
