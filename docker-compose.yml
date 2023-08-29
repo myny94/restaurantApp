@@ -11,6 +11,15 @@ services:
     volumes:
       - db:/var/lib/postgresql/data
       - ./db/init.sql:/docker-entrypoint-initdb.d/create_tables.sql
+  backend:
+    image: node:20-alpine
+    ports: 
+      - "5173:5173"
+    working_dir: /app
+    volumes:
+      - .:/app
+    entrypoint: ["/bin/sh", "-c", "npm install && npm start"]
+    
 volumes:
   db:
     driver: local
