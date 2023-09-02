@@ -16,8 +16,7 @@ create table reservation(
 create table restaurant_table(
     id uuid default gen_random_uuid() primary key,
     restaurant_id uuid not null references restaurant(id) on delete cascade,
-    capacity int not null check (capacity > 0),
-    description text not null
+    capacity int not null check (capacity > 0)
 );
 
 create table reservation_table_association(
