@@ -71,18 +71,21 @@ const reservationResolver: Resolvers = {
           ).as('tables'),
         ])
         .executeTakeFirst()
-
-      return {
-        id: reservation.id,
-        reservationFrom: reservation.reservation_from,
-        reservationTo: reservation.reservation_to,
-        restaurantId: reservation.restaurant_id,
-        numberOfPersons: reservation.number_of_persons,
-        tables: reservation.tables.map(table => ({
-          id: table.id,
-          restaurantId: table.restaurant_id,
-          capacity: table.capacity,
-        })),
+      if (reservation) {
+        return {
+          id: reservation.id,
+          reservationFrom: reservation.reservation_from,
+          reservationTo: reservation.reservation_to,
+          restaurantId: reservation.restaurant_id,
+          numberOfPersons: reservation.number_of_persons,
+          tables: reservation.tables.map(table => ({
+            id: table.id,
+            restaurantId: table.restaurant_id,
+            capacity: table.capacity,
+          })),
+        }
+      } else {
+        return null
       }
     },
   },
@@ -91,16 +94,25 @@ const reservationResolver: Resolvers = {
     addNewReservation: async (_: unknown, args) => {
       const newReservation = await db
         .insertInto('reservation')
-        .values(args.input)
+        .values({
+          restaurant_id: args.input.restaurantId,
+          reservation_from: args.input.reservationFrom,
+          reservation_to: args.input.reservationTo,
+          number_of_persons: args.input.numberOfPersons,
+        })
         .returningAll()
         .executeTakeFirst()
-      return {
-        id: newReservation.id,
-        tables: [],
-        numberOfPersons: newReservation.number_of_persons,
-        restaurantId: newReservation.restaurant_id,
-        reservationFrom: newReservation.reservation_from,
-        reservationTo: newReservation.reservation_to,
+      if (newReservation) {
+        return {
+          id: newReservation.id,
+          tables: [],
+          numberOfPersons: newReservation.number_of_persons,
+          restaurantId: newReservation.restaurant_id,
+          reservationFrom: newReservation.reservation_from,
+          reservationTo: newReservation.reservation_to,
+        }
+      } else {
+        throw new Error('failed to add a new reservation')
       }
     },
     deleteReservation: async (_: unknown, args) => {
@@ -109,7 +121,7 @@ const reservationResolver: Resolvers = {
         .where('reservation.id', '=', args.id)
         .returning('id')
         .executeTakeFirst()
-      return deletedReservation.id
+      return deletedReservation?.id ?? null
     },
   },
 }
