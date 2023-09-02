@@ -21,8 +21,8 @@ export type Mutation = {
   __typename?: 'Mutation';
   addNewReservation: Reservation;
   addNewRestaurant: Restaurant;
-  deleteReservation: Scalars['String']['output'];
-  deleteRestaurant: Scalars['String']['output'];
+  deleteReservation?: Maybe<Scalars['String']['output']>;
+  deleteRestaurant?: Maybe<Scalars['String']['output']>;
 };
 
 
@@ -32,7 +32,7 @@ export type MutationAddNewReservationArgs = {
 
 
 export type MutationAddNewRestaurantArgs = {
-  input?: InputMaybe<RestaurantInput>;
+  input: RestaurantInput;
 };
 
 
@@ -229,9 +229,9 @@ export interface DateScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
   addNewReservation?: Resolver<ResolversTypes['Reservation'], ParentType, ContextType, RequireFields<MutationAddNewReservationArgs, 'input'>>;
-  addNewRestaurant?: Resolver<ResolversTypes['Restaurant'], ParentType, ContextType, Partial<MutationAddNewRestaurantArgs>>;
-  deleteReservation?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<MutationDeleteReservationArgs, 'id'>>;
-  deleteRestaurant?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<MutationDeleteRestaurantArgs, 'id'>>;
+  addNewRestaurant?: Resolver<ResolversTypes['Restaurant'], ParentType, ContextType, RequireFields<MutationAddNewRestaurantArgs, 'input'>>;
+  deleteReservation?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, RequireFields<MutationDeleteReservationArgs, 'id'>>;
+  deleteRestaurant?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, RequireFields<MutationDeleteRestaurantArgs, 'id'>>;
 };
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
