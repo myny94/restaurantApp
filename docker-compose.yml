@@ -14,12 +14,16 @@ services:
   backend:
     image: node:20-alpine
     ports: 
-      - "5173:5173"
+      - "4000:4000"
     working_dir: /app
     volumes:
-      - .:/app
+      - ./:/app
     entrypoint: ["/bin/sh", "-c", "npm install && npm start"]
-    
+    links:
+      - "db:db"
+    depends_on:
+      - db
+
 volumes:
   db:
     driver: local

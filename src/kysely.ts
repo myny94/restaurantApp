@@ -38,7 +38,7 @@ export interface Database {
 export const db = new Kysely<Database>({
   dialect: new PostgresDialect({
     pool: new Pool({
-      host: 'localhost',
+      host: 'db',
       database: 'postgres',
       user: 'postgres',
       password: 'postgres',
