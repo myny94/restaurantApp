@@ -5,7 +5,7 @@
   "main": "src/index.ts",
   "scripts": {
     "compile": "tsc",
-    "start": "npm run compile && node ./dist/src/index.js",
+    "start": "nodemon -I --exec node --experimental-specifier-resolution=node --legacy-watch --loader ts-node/esm ./src/index.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
     "codegen": "graphql-codegen --config codegen.ts",
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives",
@@ -26,7 +26,6 @@
   "type": "module",
   "devDependencies": {
     "@graphql-codegen/cli": "5.0.0",
-    "@graphql-codegen/client-preset": "4.1.0",
     "@graphql-codegen/typescript-resolvers": "^4.0.1",
     "@types/lodash": "^4.14.196",
     "@types/node": "^20.1.0",
@@ -40,14 +39,14 @@
   },
   "dependencies": {
     "@apollo/server": "^4.7.1",
-    "@graphql-codegen/typed-document-node": "^5.0.1",
-    "@graphql-codegen/typescript": "^4.0.1",
-    "@graphql-codegen/typescript-operations": "^4.0.1",
     "@graphql-eslint/eslint-plugin": "^3.20.1",
-    "@graphql-typed-document-node/core": "^3.2.0",
+    "@typescript-eslint/parser": "^6.5.0",
     "graphql": "^16.7.1",
     "graphql-request": "^6.1.0",
     "kysely": "^0.24.2",
-    "pg": "^8.10.0"
+    "lodash": "^4.17.21",
+    "nodemon": "^3.0.1",
+    "pg": "^8.10.0",
+    "ts-node": "^10.9.1"
   }
 }
