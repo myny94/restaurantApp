@@ -58,10 +58,10 @@ const typeDefs = gql`
   }
 
   type Mutation {
-    addNewRestaurant(input: RestaurantInput): Restaurant!
-    deleteRestaurant(id: String!): String!
+    addNewRestaurant(input: RestaurantInput!): Restaurant!
+    deleteRestaurant(id: String!): String
     addNewReservation(input: ReservationInput!): Reservation!
-    deleteReservation(id: String!): String!
+    deleteReservation(id: String!): String
   }
 `
 export default typeDefs
