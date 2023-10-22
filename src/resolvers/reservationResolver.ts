@@ -1,6 +1,5 @@
-import { db, Table } from '../kysely.js'
+import { db } from '../kysely.js'
 import { Resolvers } from '../generated/gql-types.js'
-import _ from 'lodash'
 import { jsonArrayFrom } from 'kysely/helpers/postgres'
 
 const reservationResolver: Resolvers = {
@@ -125,17 +124,14 @@ const reservationResolver: Resolvers = {
         })
         .where('id', '=', args.id)
         .returningAll()
-        .executeTakeFirst()
-      if (updatedReservation) {
-        return {
-          id: args.id,
-          restaurantId: args.input.restaurantId,
-          numberOfPersons: updatedReservation?.number_of_persons,
-          reservationFrom: updatedReservation?.reservation_from,
-          reservationTo: updatedReservation?.reservation_to,
-        }
-      } else {
-        throw new Error('failed to update the existing notification.')
+        .executeTakeFirstOrThrow()
+
+      return {
+        id: args.id,
+        restaurantId: args.input.restaurantId,
+        numberOfPersons: updatedReservation?.number_of_persons,
+        reservationFrom: updatedReservation?.reservation_from,
+        reservationTo: updatedReservation?.reservation_to,
       }
     },
     deleteReservation: async (_: unknown, args) => {

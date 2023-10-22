@@ -12,7 +12,7 @@ const { url } = await startStandaloneServer(server, {
   context: async () => {
     return {}
   },
-  listen: { port: 4000 }
+  listen: { port: 4000 },
 })
 
 console.log(`🚀  Server ready at: ${url}`)
