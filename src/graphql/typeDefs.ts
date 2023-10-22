@@ -20,7 +20,7 @@ const typeDefs = gql`
   type Reservation {
     id: ID!
     restaurantId: String!
-    tables: [Table!]!
+    tables: [Table]
     numberOfPersons: Int!
     reservationFrom: Date!
     reservationTo: Date!
@@ -59,9 +59,13 @@ const typeDefs = gql`
 
   type Mutation {
     addNewRestaurant(input: RestaurantInput!): Restaurant!
+    updateRestaurant(id: String!, input: RestaurantInput!): Restaurant!
     deleteRestaurant(id: String!): String
     addNewReservation(input: ReservationInput!): Reservation!
+    updateReservation(id: String!, input: ReservationInput!): Reservation!
     deleteReservation(id: String!): String
+    addTableToRestaurant(restaurantId: String!, input: TableInput!): Table!
+    removeTableFromRestaurant(id: String!): String
   }
 `
 export default typeDefs

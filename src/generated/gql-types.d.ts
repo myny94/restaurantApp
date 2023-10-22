@@ -21,8 +21,12 @@ export type Mutation = {
   __typename?: 'Mutation';
   addNewReservation: Reservation;
   addNewRestaurant: Restaurant;
+  addTableToRestaurant: Table;
   deleteReservation?: Maybe<Scalars['String']['output']>;
   deleteRestaurant?: Maybe<Scalars['String']['output']>;
+  removeTableFromRestaurant?: Maybe<Scalars['String']['output']>;
+  updateReservation: Reservation;
+  updateRestaurant: Restaurant;
 };
 
 
@@ -36,6 +40,12 @@ export type MutationAddNewRestaurantArgs = {
 };
 
 
+export type MutationAddTableToRestaurantArgs = {
+  input: TableInput;
+  restaurantId: Scalars['String']['input'];
+};
+
+
 export type MutationDeleteReservationArgs = {
   id: Scalars['String']['input'];
 };
@@ -43,6 +53,23 @@ export type MutationDeleteReservationArgs = {
 
 export type MutationDeleteRestaurantArgs = {
   id: Scalars['String']['input'];
+};
+
+
+export type MutationRemoveTableFromRestaurantArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type MutationUpdateReservationArgs = {
+  id: Scalars['String']['input'];
+  input: ReservationInput;
+};
+
+
+export type MutationUpdateRestaurantArgs = {
+  id: Scalars['String']['input'];
+  input: RestaurantInput;
 };
 
 export type Query = {
@@ -83,7 +110,7 @@ export type Reservation = {
   reservationFrom: Scalars['Date']['output'];
   reservationTo: Scalars['Date']['output'];
   restaurantId: Scalars['String']['output'];
-  tables: Array<Table>;
+  tables?: Maybe<Array<Maybe<Table>>>;
 };
 
 export type ReservationInput = {
@@ -230,8 +257,12 @@ export interface DateScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
   addNewReservation?: Resolver<ResolversTypes['Reservation'], ParentType, ContextType, RequireFields<MutationAddNewReservationArgs, 'input'>>;
   addNewRestaurant?: Resolver<ResolversTypes['Restaurant'], ParentType, ContextType, RequireFields<MutationAddNewRestaurantArgs, 'input'>>;
+  addTableToRestaurant?: Resolver<ResolversTypes['Table'], ParentType, ContextType, RequireFields<MutationAddTableToRestaurantArgs, 'input' | 'restaurantId'>>;
   deleteReservation?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, RequireFields<MutationDeleteReservationArgs, 'id'>>;
   deleteRestaurant?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, RequireFields<MutationDeleteRestaurantArgs, 'id'>>;
+  removeTableFromRestaurant?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, RequireFields<MutationRemoveTableFromRestaurantArgs, 'id'>>;
+  updateReservation?: Resolver<ResolversTypes['Reservation'], ParentType, ContextType, RequireFields<MutationUpdateReservationArgs, 'id' | 'input'>>;
+  updateRestaurant?: Resolver<ResolversTypes['Restaurant'], ParentType, ContextType, RequireFields<MutationUpdateRestaurantArgs, 'id' | 'input'>>;
 };
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
@@ -250,7 +281,7 @@ export type ReservationResolvers<ContextType = any, ParentType extends Resolvers
   reservationFrom?: Resolver<ResolversTypes['Date'], ParentType, ContextType>;
   reservationTo?: Resolver<ResolversTypes['Date'], ParentType, ContextType>;
   restaurantId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  tables?: Resolver<Array<ResolversTypes['Table']>, ParentType, ContextType>;
+  tables?: Resolver<Maybe<Array<Maybe<ResolversTypes['Table']>>>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 

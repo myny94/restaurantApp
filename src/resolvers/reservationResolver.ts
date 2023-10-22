@@ -1,4 +1,4 @@
-import { db } from '../kysely.js'
+import { db, Table } from '../kysely.js'
 import { Resolvers } from '../generated/gql-types.js'
 import _ from 'lodash'
 import { jsonArrayFrom } from 'kysely/helpers/postgres'
@@ -113,6 +113,29 @@ const reservationResolver: Resolvers = {
         }
       } else {
         throw new Error('failed to add a new reservation')
+      }
+    },
+    updateReservation: async (_: unknown, args) => {
+      const updatedReservation = await db
+        .updateTable('reservation')
+        .set({
+          number_of_persons: args.input.numberOfPersons,
+          reservation_from: args.input.reservationFrom,
+          reservation_to: args.input.reservationTo,
+        })
+        .where('id', '=', args.id)
+        .returningAll()
+        .executeTakeFirst()
+      if (updatedReservation) {
+        return {
+          id: args.id,
+          restaurantId: args.input.restaurantId,
+          numberOfPersons: updatedReservation?.number_of_persons,
+          reservationFrom: updatedReservation?.reservation_from,
+          reservationTo: updatedReservation?.reservation_to,
+        }
+      } else {
+        throw new Error('failed to update the existing notification.')
       }
     },
     deleteReservation: async (_: unknown, args) => {

@@ -110,8 +110,8 @@ const restaurantResolver: Resolvers = {
           address: args.input.address,
         })
         .returningAll()
-        .executeTakeFirst()
-      if (newRestaurant) {
+        .executeTakeFirstOrThrow()
+
         const tables = await db
           .insertInto('restaurant_table')
           .values(
@@ -122,7 +122,6 @@ const restaurantResolver: Resolvers = {
           )
           .returningAll()
           .execute()
-        console.log(tables)
         return {
           id: newRestaurant.id,
           name: newRestaurant.name,
@@ -134,9 +133,6 @@ const restaurantResolver: Resolvers = {
             restaurantId: table.restaurant_id,
           })),
         }
-      } else {
-        throw new Error('failed to add a new restaurant')
-      }
     },
     deleteRestaurant: async (_: unknown, args) => {
       const deletedRestaurant = await db
@@ -146,6 +142,29 @@ const restaurantResolver: Resolvers = {
         .executeTakeFirst()
       return deletedRestaurant?.id ?? null
     },
+    addTableToRestaurant: async (_: unknown, args) => {
+      const newTable = await db
+        .insertInto('restaurant_table')
+        .values({
+          restaurant_id: args.restaurantId,
+          capacity: args.input?.capacity
+        })
+        .returningAll()
+        .executeTakeFirstOrThrow()
+      return {
+        id: newTable.id,
+        restaurantId: newTable.restaurant_id,
+        capacity: newTable.capacity
+      }
+    },
+    removeTableFromRestaurant: async (_:unknown, args) => {
+      const deletedTable = await db
+        .deleteFrom('restaurant')
+        .where('restaurant.id', '=', args.id)
+        .returning('id')
+        .executeTakeFirst()
+      return deletedTable?.id ?? null
+    }
   },
 }
 export default restaurantResolver
